@@ -1,0 +1,6 @@
+# The executable files. 
+*.out 
+
+# This is your own code, do not upload it! 
+assign2.cpp 
+
