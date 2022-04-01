@@ -1,7 +1,7 @@
 #pragma once
 
 #include "assign2_exception.hpp"
-#include "assign2_tree_4test.hpp"
+#include "assign2_tree.hpp"
 
 #define CHILD_DIRECTION_LEFT 0
 #define CHILD_DIRECTION_RIGHT 1

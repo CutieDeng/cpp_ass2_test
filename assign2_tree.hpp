@@ -1,6 +1,12 @@
 #pragma once
 
 #include <cstdint>
+#include <string> 
+#include <unordered_set> 
+
+struct tree_node; 
+
+inline thread_local std::unordered_set<void *> records; 
 
 struct tree_node {
     tree_node *father;
@@ -10,6 +16,27 @@ struct tree_node {
     uint32_t tree_count;  ///< the size of the subtree (including the root)
 
     uint64_t data;  ///< only save 8-bytes width memory for the data of any representation
+
+    inline void *operator new (size_t s) {
+        auto p {malloc(s)}; 
+        records.insert(p); 
+        return p; 
+    }
+
+    inline void *operator new[] (size_t v) noexcept(false) {
+        throw std::string {"本次测试禁止使用 new[] 创建 tree_node 对象数组！"}; 
+    }
+
+    inline void operator delete (void *p) noexcept(false) {
+        if (!records.count(p)) 
+            throw std::string{"企图释放非法的内存段"}; 
+        records.erase(p); 
+        free(p); 
+    }
+
+    inline void operator delete[] (void *p) noexcept (false) {
+        throw std::string {"不应使用 delete[] 操作。"}; 
+    }
 };
 
 struct BST {
