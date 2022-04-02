@@ -81,13 +81,39 @@ namespace {
 
 请加上严格的测试条件，以避免测试程序不能完全执行完毕。
 
-此外，你可以选择在自己的实现（也就是  `assign2.cpp` ）中在面对难以处理的情形下——将一个 `std::string`  丢出以获得本框架的支持。**这不太好，但我允许你这么做。**我会在一个 test example 中写一段示范代码来展示这个特性。
+此外，你可以选择在自己的实现（也就是  `assign2.cpp` ）中在面对难以处理的情形下——将一个 `std::string`  丢出以获得本框架的支持。
+
+**这不太好，但我允许你这么做。**
+
+我会在一个 test example 中写一段示范代码来展示这个特性。
 
 或者参考下面这段语法：（我希望丢出的内容是：今天阳光灿烂。）
 
 ```C++
 throw std::string {"今天阳光灿烂"}; 
 ```
+
+
+
+---
+
+新版更新！
+
+<div align="right">Sat Apr 2 10:32:03 CST 2022</div>
+
+于本机平台框架能从 segmentation fault 中恢复了！
+
+本机所用的编译器版本：
+
+```
+Apple clang version 13.1.6 (clang-1316.0.21.2)
+Target: arm64-apple-darwin21.4.0
+Thread model: posix
+```
+
+
+
+其它平台有待测试。
 
 
 

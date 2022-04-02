@@ -1,6 +1,9 @@
 #include <iostream> 
 #include <optional>
+#include <functional> 
 #include "assign2.hpp"
+
+std::function<void ()> run_next; 
 
 template <int x> 
 std::optional<std::string> test(); 
@@ -21,6 +24,7 @@ void run<test_number>() {
 template <int v> 
 void run() {
     std::cout << "正在进行第 " << v << " 组测试：" << std::endl; 
+    run_next = run<v+1>; 
     try {
         auto r (test<v>()); 
         if (!r && records.empty()) 
@@ -41,23 +45,31 @@ void run() {
     run<v+1>(); 
 }
 
-// #include <cstdlib> 
-// #include <signal.h>
-// void segfault_sigaction(int signal, siginfo_t *si, void *arg) {
-//     std::cout << "Segmentation Fault! " << std::endl 
-//         << "====================" << std::endl << std::endl; 
-//     exit(0); 
-// }
+#include <cstdlib>
+#include <cstdio>  
+#include <csignal>
+#include <cstring>
+
+void segfault_sigaction(int signal, siginfo_t *si, void *arg) {
+    std::cout << "测试异常：Segmentation Fault! " << std::endl 
+        << "====================" << std::endl << std::endl; 
+    run_next(); 
+    exit(0); 
+}
+
+void register_seg_fault() {
+   struct sigaction sa;
+        
+    memset(&sa, 0, sizeof(struct sigaction));
+    sigemptyset(&sa.sa_mask);
+    sa.sa_sigaction = segfault_sigaction;
+    sa.sa_flags   = SA_SIGINFO;
+
+    sigaction(SIGSEGV, &sa, NULL);
+}
 
 int main() {
-    // struct sigaction sa; 
-
-    // memset(&sa, 0, sizeof sa); 
-    // sigemptyset(&sa.sa_mask); 
-    // sa.sa_mask = segfault_sigaction; 
-    // sa.sa_flags = SA_SIGINFO; 
-
-    // sigaction(SIGSEGV, &sa, nullptr); 
-
+    register_seg_fault(); 
+    
     run<0>(); 
 }

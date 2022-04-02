@@ -5,3 +5,6 @@
 assign2.cpp 
 
 .vscode 
+
+# If you want to output the test information in a file, use the .log postfix. 
+*.log 

@@ -115,6 +115,20 @@ r_type test<__COUNTER__> () {
 
 template <> 
 r_type test<__COUNTER__> () {
+    // 高危测试！
+    std::cout << "内存访问错误测试（Segmentation Fault）！" << std::endl; 
+    std::cout << "如果本段代码导致程式中断，请注释掉该测试方法！" << std::endl; 
+
+    std::cout << "执行代码 char *p = nullptr; *p = 0; " << std::endl; 
+    char *p = nullptr; 
+    *p = 0;
+
+    std::cout << "执行代码成功。" << std::endl; 
+    return {}; 
+}
+
+template <> 
+r_type test<__COUNTER__> () {
     // 从本次测试开始，开始正式进行 part 1 测试。
     std::cout << "Part 1 部分测试正式开始。" << std::endl; 
 
