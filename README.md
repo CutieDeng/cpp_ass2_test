@@ -119,6 +119,41 @@ Thread model: posix
 
 ---
 
+新的支持加入：
+
+- 对于继承自 `std::exception` 的异常，本框架能够将其捕获并输出其造成错误的原因。
+
+
+
+由于新支持的加入，我给出以下的测试代码、实现代码的建议。
+
+在测试代码中，你可以使用 `throw std::string` 和 `throw std::runtime_error` 等方式进行异常的抛出处理。
+
+但你应只使用 `catch std::runtime_error` 处理后一种异常（如果你喜欢），前一种异常原则上你不允许尝试捕获（但其实你可以转发它）。
+
+由于异常抛出会导致代码执行顺序的错乱，建议请不要使用 `new` 语句进行 `BST` 对象的创建，而是直接在栈上构建。
+
+示例代码：
+
+```C++
+template <> 
+r_type test<__COUNTER__>() {
+  BST bst {}; // 使用 {} 指示编译器对其进行强制初始化。
+  
+  tree_node *t; 
+  auto error_code = inserted_into_BST(&bst, 520, &t); 
+  
+  // 执行你的测试代码，例如
+  if (error_code == 0) 
+    return "成功在没有初始化比较器的二叉搜索树上插入新节点。"; 
+ 	// ... 
+}
+```
+
+
+
+---
+
 Author: Cutie Deng
 
 Mail: Dengzr2020@mail.sustech.edu.cn

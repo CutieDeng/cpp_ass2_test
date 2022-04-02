@@ -33,8 +33,10 @@ void run() {
             std::cout << "测试失败，错误原因：" << *r << std::endl; 
         else 
             std::cout << "测试失败，错误原因：内存泄漏。" << std::endl; 
-    } catch (std::string cause) {
+    } catch (std::string const &cause) {
         std::cout << "测试异常，原因：" << cause << std::endl; 
+    } catch (std::exception const &e) {
+        std::cout << "测试内抛出异常，原因：" << e.what() << std::endl; 
     }
     std::cout << "====================" << std::endl << std::endl; 
     
