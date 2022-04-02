@@ -41,6 +41,23 @@ void run() {
     run<v+1>(); 
 }
 
+// #include <cstdlib> 
+// #include <signal.h>
+// void segfault_sigaction(int signal, siginfo_t *si, void *arg) {
+//     std::cout << "Segmentation Fault! " << std::endl 
+//         << "====================" << std::endl << std::endl; 
+//     exit(0); 
+// }
+
 int main() {
+    // struct sigaction sa; 
+
+    // memset(&sa, 0, sizeof sa); 
+    // sigemptyset(&sa.sa_mask); 
+    // sa.sa_mask = segfault_sigaction; 
+    // sa.sa_flags = SA_SIGINFO; 
+
+    // sigaction(SIGSEGV, &sa, nullptr); 
+
     run<0>(); 
 }

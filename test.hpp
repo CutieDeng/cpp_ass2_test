@@ -68,6 +68,17 @@ r_type test<__COUNTER__> () {
 
 template <> 
 r_type test<__COUNTER__> () {
+    std::cout << "异常抛出测试，测试能否通过抛出 std::string 异常来退出执行该方法。" << std::endl; 
+    std::cout << "请不要使用 throw \"a sentence\" 的方法抛出异常！其不会被本框架捕获和处理！" << std::endl; 
+
+    throw std::string {"我是一个 std::string 异常。"}; 
+
+    std::cout << "此 statement 在异常抛出后面。" << std::endl; 
+    return {}; 
+}
+
+template <> 
+r_type test<__COUNTER__> () {
     // new 方法的使用建议。
 
     std::cout << "本测试方法为环境测试，即测试本机环境下的一些代码的运行结果和情况。" << std::endl; 
@@ -190,19 +201,117 @@ r_type test<__COUNTER__>() {
     std::cout << "调用 ADD_NODE_RIGHT(p, rightson), 再次调用 ADD_NODE_RIGHT(p, rightson2). " 
         << std::endl; 
     
+    std::cout << "回收所有新开辟的堆内存。" << std::endl; 
     delete p; 
     delete rightson; 
     delete rightson2; 
 
-    if (!r && (r2 & DUPLICATED_RIGHT_CHILD_EXCEPTION)) {
+    if (!r && (r2 == DUPLICATED_RIGHT_CHILD_EXCEPTION)) {
         return {}; 
     } else {
         if (r) 
             return "运行 ADD_NODE_RIGHT(p, rightson) 过程遭遇错误。"; 
         if (!(r2 & DUPLICATED_RIGHT_CHILD_EXCEPTION)) 
             return "运行 ADD_NODE_RIGHT(p, rightson2) 时没有意识到 duplicate 的错误发生。"; 
+        if (r2 & ~DUPLICATED_RIGHT_CHILD_EXCEPTION)
+            return "运行 ADD_NODE_RIGHT(p, rightson2) 时汇报了额处的错误。"; 
         return "未知的错误"; 
     }
+}
+
+template <> 
+r_type test<__COUNTER__>() {
+    typedef tree_node *ptr; 
+
+    ptr p = new tree_node{}; 
+    ptr leftson = new tree_node{}; 
+    ptr leftson2 = new tree_node{}; 
+
+    std::cout << "DUPLICATED LEFT CHILD EXCEPTION 测试" <<std::endl; 
+    std::cout << "构造三个空节点 p, leftson, leftson2. " << std::endl; 
+
+    auto r = ADD_NODE_LEFT(p, leftson); 
+    auto r2 = ADD_NODE_LEFT(p, leftson2); 
+
+    std::cout << "调用 ADD_NODE_LEFT(p, leftson), 再次调用 ADD_NODE_LEFT(p, leftson2). " 
+        << std::endl; 
+    
+    std::cout << "回收所有新开辟的堆内存。" << std::endl; 
+    delete p; 
+    delete leftson; 
+    delete leftson2; 
+
+    if (!r && (r2 == DUPLICATED_LEFT_CHILD_EXCEPTION)) {
+        return {}; 
+    } else {
+        if (r) 
+            return "运行 ADD_NODE_LEFT(p, leftson) 过程遭遇错误。"; 
+        if (!(r2 & DUPLICATED_LEFT_CHILD_EXCEPTION)) 
+            return "运行 ADD_NODE_LEFT(p, leftson2) 时没有意识到 duplicate 的错误发生。"; 
+        if (r2 & ~DUPLICATED_LEFT_CHILD_EXCEPTION)
+            return "运行 ADD_NODE_LEFT(p, leftson2) 时汇报了额处的错误。"; 
+        return "未知的错误"; 
+    }
+}
+
+template <> 
+r_type test<__COUNTER__>() {
+
+    std::cout << "DUPLICATED FATHER EXCEPTION 测试" << std::endl; 
+    
+    std::cout << "初始化三个节点 p, f, f2. " << std::endl; 
+    tree_node *p = new tree_node{}; 
+    tree_node *f = new tree_node{}; 
+    tree_node *f2 = new tree_node{}; 
+
+    std::cout << "执行 ADD_NODE_LEFT(f, p), 再执行 ADD_NODE_RIGHT(f2, p)" << std::endl; 
+    auto a1 = ADD_NODE_LEFT(f, p); 
+    auto a2 = ADD_NODE_RIGHT(f2, p); 
+
+    delete f; 
+    delete f2; 
+    delete p; 
+
+    if (a1) {
+        return "执行 ADD_NODE_LEFT(f, p) 过程中被拒绝。"; 
+    } else if (!a2) {
+        return "错误执行成功了 ADD_NODE_RIGHT(f2, p). "; 
+    } else if (a2 & DUPLICATED_FATHER_EXCEPTION) {
+        if (a2 != DUPLICATED_FATHER_EXCEPTION)
+            return "ADD_NODE_RIGHT(f2, p) 方法汇报了更多异常。"; 
+        else 
+            return {}; 
+    } else 
+        return "ADD_NODE_RIGHT(f2, p) 方法汇报了其它异常。"; 
+}
+
+template <> 
+r_type test<__COUNTER__>() {
+    std::cout << "NULL POINTER EXCEPTION 测试" << std::endl; 
+
+    std::cout << "构造了两个节点 p, s. " << std::endl; 
+    tree_node *p = new tree_node{}; 
+    tree_node *s = new tree_node{}; 
+
+    std::cout << "执行 ADD_NODE_LEFT(p, s), 再执行 ADD_NODE_LEFT(nullptr, s). " << std::endl; 
+
+    auto a1 = ADD_NODE_LEFT(p, s); 
+
+    // 该操作将 nullptr 转化为一个左值，以避免一些同学使用了更苛性的语法检查编译手段导致无法通过 compile. 
+    tree_node *s2 = nullptr; 
+    auto a2 = ADD_NODE_LEFT(s2, s); 
+
+    delete p; 
+    delete s; 
+
+    if (a1) {
+        throw "执行 ADD_NODE_LEFT(p, s) 过程中遭遇错误。"; 
+    } else if (a2 & NULL_POINTER_EXCEPTION) {
+        if (a2 & ~(NULL_POINTER_EXCEPTION | DUPLICATED_FATHER_EXCEPTION)) 
+            return ({std::stringstream s; s << "执行 ADD_NODE_LEFT(nullptr, s) 返回了更多的错误信息。其返回的错误码为：" << a2 << ". "; s.str(); });  
+        return {}; 
+    } else 
+        return "执行 ADD_NODE_LEFT(nullptr, s) 过程没有返回 NULL POINTER EXCEPTION. "; 
 }
 
 namespace {
