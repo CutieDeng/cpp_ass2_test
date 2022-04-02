@@ -3,6 +3,7 @@
 #include <optional> 
 #include <string> 
 #include <sstream> 
+#include <exception> 
 
 // Use std::optional..., just called r_type and name test to achieve your tests! 
 
@@ -34,6 +35,18 @@ r_type test<__COUNTER__> () {
 
     std::cout << "使用 new tree_node(); 构造一个 tree_node 节点，并忘记释放它。" << std::endl; 
     new tree_node(); 
+
+    return {}; 
+}
+
+template <> 
+r_type test<__COUNTER__> () {
+    // 进行异常抛出测试。
+    std::cout << "正在进行异常抛出测试。" << std::endl; 
+
+    throw std::runtime_error("我是被抛出的运行时异常"); 
+
+    std::cout << "异常抛出完成。" << std::endl; 
 
     return {}; 
 }
