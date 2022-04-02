@@ -24,12 +24,12 @@ struct tree_node {
     }
 
     inline void *operator new[] (size_t v) noexcept(false) {
-        throw std::string {"本次测试禁止使用 new[] 创建 tree_node 对象数组！"}; 
+        throw std::string {"本次测试禁止使用 new[] 创建 tree_node 对象数组。"}; 
     }
 
     inline void operator delete (void *p) noexcept(false) {
         if (!records.count(p)) 
-            throw std::string{"企图释放非法的内存段"}; 
+            throw std::string{"试图释放非法的内存段。"}; 
         records.erase(p); 
         free(p); 
     }

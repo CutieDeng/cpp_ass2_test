@@ -14,7 +14,7 @@ void run();
 
 template <> 
 void run<test_number>() {
-    std::cout << "本次测试到此结束！" << std::endl 
+    std::cout << "本次测试到此结束。" << std::endl 
         << "====================" << std::endl << std::endl; 
 }
 
@@ -28,7 +28,7 @@ void run() {
         else if (r)
             std::cout << "测试失败，错误原因：" << *r << std::endl; 
         else 
-            std::cout << "测试失败，错误原因：内存泄漏！" << std::endl; 
+            std::cout << "测试失败，错误原因：内存泄漏。" << std::endl; 
     } catch (std::string cause) {
         std::cout << "测试异常，原因：" << cause << std::endl; 
     }

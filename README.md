@@ -18,10 +18,10 @@ g++ -std=c++20 test.cpp assign2.cpp -o test.out && ./test.out
 
 下面是该框架所遵守的约定：
 
-- 当你通过堆内存构建生命周期不便控制的 tree_node 的结点是，应当使用 `new tree_node` 进行对象的创建。其它方法都不应当使用：使用 `malloc` 和 `placement new` 都会破坏该框架对 `tree_node` 对象的监视能力，导致对代码的正确性发生错误判断；使用 `new tree_node[]` 构建对象数组在本框架当前版本同样被禁止。
+- 当你通过堆内存构建生命周期不便控制的 tree_node 的结点时，应当使用 `new tree_node` 进行对象的创建。其它方法都不应当使用：使用 `malloc` 和 `placement new` 都会破坏该框架对 `tree_node` 对象的监视能力，导致对代码的正确性发生错误判断；使用 `new tree_node[]` 构建对象数组在本框架当前版本同样被禁止。
   本框架能够回收满足该约定的所有内存泄漏，并中止错误的 `delete` 方法运行。
-- 在你的方法中不应当出现未 handle 的异常控制，或 handle 不继承自 `std::exception` 的异常。特别强调，不应当使用 `std::string` 作为异常的类型——因为我的框架已经用了它了。
-  否则造成的程序测试分析错误我不负责。
+- 在你的 `assign2` 实现方法中不应当出现未 handle 的异常控制，或 throw 出不继承自 `std::exception` 的异常。特别强调，不应当使用 `std::string` 作为异常的类型——因为我的框架已经用了它了。
+  否则其造成的程序测试分析错误我不负责。
 
 
 

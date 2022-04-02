@@ -13,14 +13,16 @@ namespace {
 template <> 
 r_type test<__COUNTER__>() {
     // 测试框架测试，测试框架是否能正常进行。
-    std::cout << "框架正确性测试。" << std::endl; 
+    std::cout << "本次测试为框架正确性测试。" << std::endl; 
+    std::cout << "其应当回答：通过测试。 " << std::endl; 
     return {}; 
 }
 
 template <> 
 r_type test<__COUNTER__> () {
     // 错误测试！
-    std::cout << "框架错误检测测试。" << std::endl; 
+    std::cout << "本次测试为框架错误检测测试。" << std::endl; 
+    std::cout << "其应当返回测试失败并回报相应的错误信息。" << std::endl; 
     return "测试该框架能否正确输出错误信息。"; 
 }
 
@@ -28,15 +30,23 @@ template <>
 r_type test<__COUNTER__> () {
     // 内存泄漏测试，测试框架能否检测内存泄漏！
     std::cout << "框架 tree_node 模型对象内存控制检测测试。" << std::endl; 
+    std::cout << "其应检测出内存泄漏情形。" << std::endl; 
+
+    std::cout << "使用 new tree_node(); 构造一个 tree_node 节点，并忘记释放它。" << std::endl; 
     new tree_node(); 
+
     return {}; 
 }
 
 template <> 
 r_type test<__COUNTER__> () {
     // 内存重复释放的安全检测！
-    std::cout << "框架 tree_node 模型对象内存控制检测测试 2. " << std::endl; 
+    std::cout << "框架 tree_node 模型对象内存控制检测测试。" << std::endl; 
+    std::cout << "其应检测出危险的内存控制操作。" << std::endl; 
+
+    std::cout << "tree_node *p = new tree_node(); 构造一个 tree_node 节点。" << std::endl; 
     tree_node *p = new tree_node(); 
+    std::cout << "两次执行 delete p; " << std::endl; 
     delete p; 
     delete p; 
     return {}; 
@@ -46,8 +56,13 @@ template <>
 r_type test<__COUNTER__> () {
     // 使用禁止的方法构造 tree_node 对象。
     std::cout << "框架特殊约束：禁用 new tree_node[] 初始化测试." << std::endl; 
+    
+    std::cout << "执行代码 tree_node *p = new tree_node[3]; " << std::endl; 
     tree_node *p = new tree_node[3]; 
+
+    std::cout << "执行代码 delete[] p"; 
     delete[] p; 
+
     return {}; 
 }
 
