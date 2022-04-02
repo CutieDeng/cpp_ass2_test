@@ -53,6 +53,11 @@ void run() {
 void segfault_sigaction(int signal, siginfo_t *si, void *arg) {
     std::cout << "测试异常：Segmentation Fault! " << std::endl 
         << "====================" << std::endl << std::endl; 
+    
+    for (auto p: records) 
+        free(p); 
+    records.clear(); 
+
     run_next(); 
     exit(0); 
 }
@@ -70,6 +75,6 @@ void register_seg_fault() {
 
 int main() {
     register_seg_fault(); 
-    
+
     run<0>(); 
 }
