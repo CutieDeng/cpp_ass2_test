@@ -1,7 +1,12 @@
 #include <iostream> 
 #include <optional>
 #include <functional> 
+
+#ifndef __WIN64__
 #include "assign2.hpp"
+#else 
+#include "assign2.cpp"
+#endif
 
 std::function<void ()> run_next; 
 
@@ -52,20 +57,26 @@ void run() {
 #include <csignal>
 #include <cstring>
 
+#ifndef __WIN64__
 void segfault_sigaction(int signal, siginfo_t *si, void *arg) {
+#else 
+void segfault_sigaction(int s) {
+#endif
     std::cout << "测试异常：Segmentation Fault! " << std::endl 
         << "====================" << std::endl << std::endl; 
     
     for (auto p: records) 
         free(p); 
     records.clear(); 
-
+    if (run_next)
     run_next(); 
     exit(0); 
 }
 
 void register_seg_fault() {
-   struct sigaction sa;
+
+#ifndef __WIN64__
+    struct sigaction sa;
         
     memset(&sa, 0, sizeof(struct sigaction));
     sigemptyset(&sa.sa_mask);
@@ -73,6 +84,9 @@ void register_seg_fault() {
     sa.sa_flags   = SA_SIGINFO;
 
     sigaction(SIGSEGV, &sa, NULL);
+#else 
+    signal(SIGSEGV, segfault_sigaction); 
+#endif
 }
 
 int main() {
