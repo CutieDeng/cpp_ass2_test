@@ -12,6 +12,9 @@
 namespace {
     typedef std::optional<std::string> r_type; 
 
+    // 该方法用于格式化 exception 信息，你可以使用该方法使一个 assign2_exception::exception 转化成一个
+    // 人类可读的字符串。 
+    // 当 exception 没有异常信息时，该方法会返回一个空字符串。
     std::string transfer_exception(assign2_exception::exception e) {
         std::stringstream i; 
         bool flag (false); 
@@ -58,6 +61,9 @@ namespace {
         return i.str(); 
     }
 
+    // check_exception 用于判断两个异常类型是否完全相同。
+    // 如果完全相同，其将会返回一个空对象，表示没有错误信息输出。
+    // 如果存在不同，其将会返回一个具体描述为什么不同，两个异常实例不同点在哪的信息以便于被测进行 DEBUG. 
     r_type check_exception(assign2_exception::exception actual, assign2_exception::exception expect) {
         if (actual == expect)
             return {}; 
@@ -67,6 +73,16 @@ namespace {
         return i.str();  
     }
 
+    r_type check_int(int actual, int expect) {
+        if (actual == expect)
+            return {}; 
+        std::stringstream i; 
+        i << "期待的整型值为: " << expect << ", 而程序运行中实际得到的值为: " << actual << "."; 
+        return i.str(); 
+    }
+
+    // inert_data 聚合了插入 BST 的操作。
+    // 你可以使用 
     std::vector<tree_node *> insert_data(BST &bst, std::initializer_list<uint64_t> const &v){
         tree_node *p (nullptr); 
         std::vector<tree_node *> r;
@@ -78,6 +94,19 @@ namespace {
             r.push_back(p); 
         }
         return std::move(r); 
+    }
+
+    void destruct_tree(BST &bst) {
+        destruct_tree_node(bst -> root); 
+        bst -> root = nullptr;        
+    }
+
+    void destruct_tree_node(tree_node *p) {
+        if (!p)
+            return ; 
+        destruct_tree(p -> l_child); 
+        destruct_tree(p -> r_child); 
+        delete p; 
     }
 
     int size_of_tree(BST &bst) {
@@ -481,15 +510,12 @@ r_type test<__COUNTER__>() {
     BST bst{.comp = compare_std};
     auto g = insert_data(bst, {1, 2, 3, 4, 5}); 
 
-    if (size_of_tree(bst) == 5) {
-        for (auto ga: g) 
-            delete ga; 
-        return {}; 
-    } else {
-        for (auto ga: g) 
-            delete ga; 
-        return "BST 的大小不为 5."; 
-    }
+    std::cout << "正在比对 bst 的 size(大小) 值。" << std::endl; 
+    auto s = size_of_tree(bst); 
+    for (auto ga: g) 
+        delete ga; 
+    
+    return check_int(s, 5); 
 }
 
 
