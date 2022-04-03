@@ -10,6 +10,15 @@ g++ -std=c++20 test.cpp assign2.cpp -o test.out && ./test.out
 
 便可执行该测试。
 
+对于没有直接使用 Windows 而没有使用 WSL, mac, Linux 的平台编译器，可能会因编译器没有支持 `inline` 的合并变量语义而导致代码链接失败，所以 Windows 平台下的同学请使用以下代码执行测试。 
+
+```shell
+g++ -std=c++2a test.cpp -o test.exe
+.\test.exe
+```
+
+
+
 
 
 ---
