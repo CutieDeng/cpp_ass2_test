@@ -4,6 +4,7 @@
 #include <string> 
 #include <sstream> 
 #include <exception> 
+#include <initializer_list>
 
 // Use std::optional..., just called r_type and name test to achieve your tests! 
 
@@ -63,6 +64,34 @@ namespace {
         i << "希望返回的异常类型为：" << transfer_exception(expect) 
             << "; 而实际返回的类型为：" << transfer_exception(actual) << ". "; 
         return i.str();  
+    }
+
+    void insert_data(BST &bst, std::initializer_list<uint64_t> const &v){
+        tree_node *p (nullptr); 
+        for (auto va: v) {
+            insert_into_BST(&bst, va, &p); 
+            if (!p)
+                throw std::string {"插入节点至 bst 中失败。"}; 
+        }
+    }
+
+    int size_of_tree(BST &bst) {
+        if (bst.root)
+            return bst.root -> tree_count; 
+        else 
+            return 0; 
+    }
+
+    int compare_std(uint64_t a, uint64_t b) {
+        if (a < b)
+            return -1; 
+        else if (a > b)
+            return 1; 
+        else return 0; 
+    }
+
+    int compare_reverse(uint64_t a, uint64_t b) {
+        return -compare_std(a, b); 
     }
 }
 
@@ -438,6 +467,22 @@ r_type test<__COUNTER__>() {
     // 实验性方法：比对答案是否正确并进行输出..
     return check_exception(e, ROOTS_FATHER_EXCEPTION); 
 }
+
+template <> 
+r_type test<__COUNTER__>() {
+    std::cout << "进行 Insert to BST 测试" << std::endl; 
+
+    std::cout << "构建 BST, 并试向其中插入值为 1, 2, 3, 4, 5 节点。" << std::endl; 
+    BST bst{.comp = compare_std};
+    insert_data(bst, {1ull, 2ull, 3ull, 4ull, 5ull}); 
+
+    if (size_of_tree(bst) == 5) {
+        return {}; 
+    } else {
+        return "BST 的大小不为 5."; 
+    }
+}
+
 
 namespace {
     constexpr int test_number {__COUNTER__}; 
