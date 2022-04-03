@@ -518,6 +518,22 @@ r_type test<__COUNTER__>() {
     return check_int(s, 5); 
 }
 
+template <> 
+r_type test<__COUNTER__> () {
+    std::cout << "进行 Duplicated Insert to BST 测试" << std::endl; 
+
+    std::cout << "构建 BST, 并试向其中插入值为 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 13, 8, 5, 3, 2 各节点。" << std::endl; 
+
+    BST bst{.comp = compare_std}; 
+    insert_data(bst, {1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 13, 8, 5, 3, 2}); 
+
+    std::cout << "正在比对 bst 的 size 值。" << std::endl; 
+    auto s = size_of_tree(bst); 
+    destruct_tree(bst); 
+
+    return check_int(s, 17); 
+}
+
 
 namespace {
     constexpr int test_number {__COUNTER__}; 
