@@ -16,42 +16,42 @@ namespace {
         std::stringstream i; 
         bool flag (false); 
         if (e & NULL_POINTER_EXCEPTION) {
-            if (flag) i << '&'; 
+            if (flag) i << " & "; 
             i << "NULL POINTER EXCEPTION"; 
             flag = true; 
         }
         if (e & DUPLICATED_LEFT_CHILD_EXCEPTION) {
-            if (flag) i << '&'; 
+            if (flag) i << " & "; 
             i << "DUPLICATED LEFT CHILD EXCEPTION"; 
             flag = true; 
         }
         if (e & DUPLICATED_RIGHT_CHILD_EXCEPTION) {
-            if (flag) i << '&'; 
+            if (flag) i << " & "; 
             i << "DUPLICATED RIGHT CHILD EXCEPTION"; 
             flag = true; 
         }
         if (e & DUPLICATED_FATHER_EXCEPTION) {
-            if (flag) i << '&'; 
+            if (flag) i << " & "; 
             i << "DUPLICATED FATHER EXCEPTION"; 
             flag = true; 
         }
         if (e & INVALID_CHILD_DIRECTION_EXCEPTION) {
-            if (flag) i << '&'; 
+            if (flag) i << " & "; 
             i << "INVALID CHILD DIRECTION EXCEPTION"; 
             flag = true; 
         }
         if (e & ROOTS_FATHER_EXCEPTION) {
-            if (flag) i << '&'; 
+            if (flag) i << " & "; 
             i << "ROOTS FATHER EXCEPTION"; 
             flag = true; 
         }
         if (e & NULL_COMP_FUNCTION_EXCEPTION) {
-            if (flag) i << '&'; 
+            if (flag) i << " & "; 
             i << "NULL COMP FUNCTION EXCEPTION"; 
             flag = true; 
         }
         if (e & SPLAY_NODE_NOT_IN_TREE_EXCEPTION) {
-            if (flag) i << '&'; 
+            if (flag) i << " & "; 
             i << "SPLAY NODE NOT IN TREE EXCEPTION"; 
             flag = true; 
         }
