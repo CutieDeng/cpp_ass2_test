@@ -87,10 +87,10 @@ void register_seg_fault() {
 #else 
     signal(SIGSEGV, segfault_sigaction); 
 #endif
+
 }
 
 int main() {
     register_seg_fault(); 
-
     run<0>(); 
 }

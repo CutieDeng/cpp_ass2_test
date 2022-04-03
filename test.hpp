@@ -9,6 +9,61 @@
 
 namespace {
     typedef std::optional<std::string> r_type; 
+
+    std::string transfer_exception(assign2_exception::exception e) {
+        std::stringstream i; 
+        bool flag (false); 
+        if (e & NULL_POINTER_EXCEPTION) {
+            if (flag) i << '&'; 
+            i << "NULL POINTER EXCEPTION"; 
+            flag = true; 
+        }
+        if (e & DUPLICATED_LEFT_CHILD_EXCEPTION) {
+            if (flag) i << '&'; 
+            i << "DUPLICATED LEFT CHILD EXCEPTION"; 
+            flag = true; 
+        }
+        if (e & DUPLICATED_RIGHT_CHILD_EXCEPTION) {
+            if (flag) i << '&'; 
+            i << "DUPLICATED RIGHT CHILD EXCEPTION"; 
+            flag = true; 
+        }
+        if (e & DUPLICATED_FATHER_EXCEPTION) {
+            if (flag) i << '&'; 
+            i << "DUPLICATED FATHER EXCEPTION"; 
+            flag = true; 
+        }
+        if (e & INVALID_CHILD_DIRECTION_EXCEPTION) {
+            if (flag) i << '&'; 
+            i << "INVALID CHILD DIRECTION EXCEPTION"; 
+            flag = true; 
+        }
+        if (e & ROOTS_FATHER_EXCEPTION) {
+            if (flag) i << '&'; 
+            i << "ROOTS FATHER EXCEPTION"; 
+            flag = true; 
+        }
+        if (e & NULL_COMP_FUNCTION_EXCEPTION) {
+            if (flag) i << '&'; 
+            i << "NULL COMP FUNCTION EXCEPTION"; 
+            flag = true; 
+        }
+        if (e & SPLAY_NODE_NOT_IN_TREE_EXCEPTION) {
+            if (flag) i << '&'; 
+            i << "SPLAY NODE NOT IN TREE EXCEPTION"; 
+            flag = true; 
+        }
+        return i.str(); 
+    }
+
+    r_type check_exception(assign2_exception::exception actual, assign2_exception::exception expect) {
+        if (actual == expect)
+            return {}; 
+        std::stringstream i; 
+        i << "希望返回的异常类型为：" << transfer_exception(expect) 
+            << "; 而实际返回的类型为：" << transfer_exception(actual) << ". "; 
+        return i.str();  
+    }
 }
 
 template <> 
@@ -339,6 +394,49 @@ r_type test<__COUNTER__>() {
         return {}; 
     } else 
         return "执行 ADD_NODE_LEFT(nullptr, s) 过程没有返回 NULL POINTER EXCEPTION. "; 
+}
+
+template <> 
+r_type test<__COUNTER__>() {
+    // 该测试来自曾令玺同学。 
+
+    std::cout << "NULL POINTER EXCEPTION 测试" << std::endl; 
+
+    std::cout << "执行 ADD_NODE_LEFT(nullptr, nullptr). " << std::endl; 
+
+    auto e = ADD_NODE_LEFT(nullptr, nullptr); 
+    if (e & NULL_POINTER_EXCEPTION) {
+        // 检测出了空指针异常 
+        if (e == NULL_POINTER_EXCEPTION)    
+            // 正确的错误码. 
+            return {}; 
+        else 
+            // 还检测出了额外的错误内容。
+            return "检测出了额外的错误内容。"; 
+    } else {
+        return "没能检测出其对应的 NULL POINTER EXCEPTION. "; 
+    }
+}
+
+template <> 
+r_type test<__COUNTER__>() {
+    std::cout << "进行 ROOTS FATHER EXCEPTION 测试" << std::endl; 
+
+    std::cout << "构建节点 p 并调用 judge_child_direction(p) " << std::endl; 
+    tree_node *p = new tree_node(); 
+    int direction; 
+    auto e = judge_child_direction(p, &direction); 
+
+    // if (e == ROOTS_FATHER_EXCEPTION) 
+    //     // 正确判断当前的异常情形
+    //     return {}; 
+    // else  
+    //     return "没能正确返回异常类型，希望返回的异常类型为 ROOTS_FATHER_EXCEPTION. "; 
+
+    delete p; 
+    
+    // 实验性方法：比对答案是否正确并进行输出..
+    return check_exception(e, ROOTS_FATHER_EXCEPTION); 
 }
 
 namespace {
