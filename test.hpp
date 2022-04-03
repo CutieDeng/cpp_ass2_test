@@ -332,7 +332,7 @@ r_type test<__COUNTER__>() {
     delete s; 
 
     if (a1) {
-        throw "执行 ADD_NODE_LEFT(p, s) 过程中遭遇错误。"; 
+        return "执行 ADD_NODE_LEFT(p, s) 过程中遭遇错误。"; 
     } else if (a2 & NULL_POINTER_EXCEPTION) {
         if (a2 & ~(NULL_POINTER_EXCEPTION | DUPLICATED_FATHER_EXCEPTION)) 
             return ({std::stringstream s; s << "执行 ADD_NODE_LEFT(nullptr, s) 返回了更多的错误信息。其返回的错误码为：" << a2 << ". "; s.str(); });  
