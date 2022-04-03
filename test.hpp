@@ -96,17 +96,17 @@ namespace {
         return std::move(r); 
     }
 
-    void destruct_tree(BST &bst) {
-        destruct_tree_node(bst -> root); 
-        bst -> root = nullptr;        
-    }
-
     void destruct_tree_node(tree_node *p) {
         if (!p)
             return ; 
-        destruct_tree(p -> l_child); 
-        destruct_tree(p -> r_child); 
+        destruct_tree_node(p -> l_child); 
+        destruct_tree_node(p -> r_child); 
         delete p; 
+    }
+
+    void destruct_tree(BST &bst) {
+        destruct_tree_node(bst.root); 
+        bst.root = nullptr;        
     }
 
     int size_of_tree(BST &bst) {
