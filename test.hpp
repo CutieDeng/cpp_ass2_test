@@ -5,6 +5,7 @@
 #include <sstream> 
 #include <exception> 
 #include <initializer_list>
+#include <vector>
 
 // Use std::optional..., just called r_type and name test to achieve your tests! 
 
@@ -66,13 +67,17 @@ namespace {
         return i.str();  
     }
 
-    void insert_data(BST &bst, std::initializer_list<uint64_t> const &v){
+    std::vector<tree_node *> insert_data(BST &bst, std::initializer_list<uint64_t> const &v){
         tree_node *p (nullptr); 
+        std::vector<tree_node *> r;
+        r.reserve(v.size());  
         for (auto va: v) {
             insert_into_BST(&bst, va, &p); 
-            if (!p)
+            if (!p) 
                 throw std::string {"插入节点至 bst 中失败。"}; 
+            r.push_back(p); 
         }
+        return std::move(r); 
     }
 
     int size_of_tree(BST &bst) {
@@ -474,11 +479,15 @@ r_type test<__COUNTER__>() {
 
     std::cout << "构建 BST, 并试向其中插入值为 1, 2, 3, 4, 5 节点。" << std::endl; 
     BST bst{.comp = compare_std};
-    insert_data(bst, {1ull, 2ull, 3ull, 4ull, 5ull}); 
+    auto g = insert_data(bst, {1, 2, 3, 4, 5}); 
 
     if (size_of_tree(bst) == 5) {
+        for (auto ga: g) 
+            delete ga; 
         return {}; 
     } else {
+        for (auto ga: g) 
+            delete ga; 
         return "BST 的大小不为 5."; 
     }
 }
