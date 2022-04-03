@@ -252,6 +252,45 @@ r_type test<__COUNTER__>() {
 
 
 
+## 测试工具
+
+本框架实现了一些基本的工具以便于开发者更好的编写测试。随着版本更新，此版内容也会尽快更新。
+
+
+
+### 错误码格式化方法
+
+该方法在 *test.hpp* 中被定义如下：`std::string transfer_exception(assign2_exception::exception e)`. 
+
+你可以传入一个 `uint32_t` 并从中获得对应的 `std::string` 描述——用以描述该错误码对应的异常类型。
+
+
+
+### 错误码比对方法
+
+该方法在 *test.hpp* 被定义：`r_type check_exception(exception actual, exception expect)`. 
+
+你可以传入两个异常类型，便能快速得到一个 `r_type` 类型的返回值——以便于你直接将其返回——该方法在 actual 与 expect 不匹配时返回一串足够详细的信息以便他人分析自己的实现代码错误。
+
+如下的代码可以帮助你了解 `r_type` 的一点用法：
+
+```C++
+r_type result; 
+if (result) {
+  // result 描述了错误信息。
+  return result; 
+} else {
+  // 此时 result 里没有错误信息，等价于 return {}; 
+  return {}; 
+}
+```
+
+
+
+上述代码和 `return result;` 完全等价。
+
+````
+
 ---
 
 Author: Cutie Deng
