@@ -272,7 +272,7 @@ namespace {
         if (bst.root) {
             if (bst.root->father)   
                 return "当前 bst.root 存在 father 节点。"; 
-            return check_node(bst.root); 
+            return cutie::check_node(*bst.root, bst.comp); 
         } else 
             return {}; 
     }
