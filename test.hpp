@@ -69,6 +69,9 @@ namespace {
     // 约束该 bst 的高度至多为 limits. 
     // 有根树的高度为 1.  
     r_type upper_limit_height(BST const &, uint32_t ); 
+
+    // 快速将指定数据的点旋转至 bst 的根节点位置。
+    r_type rotate_to_top(BST &, uint64_t ); 
 }
 
 #include "tool.hpp"
@@ -92,6 +95,9 @@ namespace {
 
 // 标准 part iv 部分测试包
 #include "test_partiv.cpp"
+
+// 标准 part iv 部分测试包
+#include "test_partv.cpp"
 
 // deprecated 测试包
 // #include "test_else.cpp"

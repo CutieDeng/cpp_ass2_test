@@ -350,4 +350,20 @@ namespace {
         } else 
             return {}; 
     }
+
+    r_type rotate_to_top(BST &bst, uint64_t data) {
+        tree_node *node {}; 
+        if (auto e = find_in_BST(&bst, data, &node); e) {
+            return format("在 bst 中搜索 {} 遭遇异常：{}. ", data, transfer_exception(e)); 
+        }
+        if (auto e = splay(&bst, node); e)
+            return format("在 bst 中旋转 node 至根节点遭遇异常：{}. ", transfer_exception(e)); 
+        if (!bst.comp) 
+            throw std::runtime_error("bst 无比较器异常。"); 
+        else if (!bst.root)
+            return "bst 根结点失踪。"; 
+        else if (bst.comp(data, bst.root->data)) 
+            return format("旋转完成后根结点非预期。根节点数据：{}, 期望的值为：{}. , ", bst.root->data, data); 
+        return {}; 
+    }
 }
