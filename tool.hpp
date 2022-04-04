@@ -137,6 +137,8 @@ namespace {
             i << "SPLAY NODE NOT IN TREE EXCEPTION"; 
             flag = true; 
         }
+        if (!flag)  
+            i << "NONE"; 
         return i.str(); 
     }
 
@@ -284,5 +286,17 @@ namespace {
     // 对标准比较器取个反吧。
     int compare_reverse(uint64_t a, uint64_t b) {
         return -compare_std(a, b); 
+    }
+
+    // 使用如下三个 tree_node 构建一个小二叉树。
+    r_type build_with_nodes(tree_node &f, tree_node &l, tree_node &r) {
+        auto e1 = ADD_NODE_LEFT(&f, &l); 
+        if (e1) 
+            return format("调用 ADD NODE LEFT 返回了意外的异常：{}. ", transfer_exception(e1)); 
+        
+        e1 = ADD_NODE_RIGHT(&f, &r); 
+        if (e1) 
+            return format("调用 ADD NODE RIGHT 返回了意处的异常：{}. ", transfer_exception(e1)); 
+        return {}; 
     }
 }
