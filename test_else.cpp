@@ -289,7 +289,3 @@ r_type test<__COUNTER__>() {
 
     return {}; 
 }
-
-namespace {
-    constexpr int test_number {__COUNTER__}; 
-}
