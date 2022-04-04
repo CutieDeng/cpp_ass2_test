@@ -221,6 +221,8 @@ namespace {
         r_type check_node(tree_node const &t, int (c)(uint64_t, uint64_t )) {
             if (t.node_count <= 0)
                 return format("检查发现某节点的 node_count 属性非法，节点信息：{}. ", t); 
+            // std::cout << "正在检查节点 node_count 信息。" << std::endl; 
+            // std::cout << format("遍历至节点 {}.", t) << std::endl; 
             if (auto i = get_node_size(t); i != t.tree_count) {
                 std::cout << "检查该点的 node_count 信息发现错误：" << std::endl; 
                 std::cout << format("错误节点为 {}.", t) << std::endl; 
@@ -250,7 +252,7 @@ namespace {
                         return format("节点 {} 缺失 father 节点信息。", *t.r_child); 
                     }
                 }
-                if (c(t.data, t.l_child->data) <= 0) {
+                if (c(t.data, t.r_child->data) > 0) {
                     return format("非法的节点分布，节点 {} 有错误的右节点。", t); 
                 }
                 if (auto e = check_node(*t.r_child, c); e)
@@ -298,5 +300,15 @@ namespace {
         if (e1) 
             return format("调用 ADD NODE RIGHT 返回了意处的异常：{}. ", transfer_exception(e1)); 
         return {}; 
+    }
+
+    // 全等比较器
+    int compare_equality(uint64_t, uint64_t ) {
+        return 0; 
+    }
+
+    // 模十比较器 
+    int compare_ones(uint64_t a, uint64_t b) {
+        return compare_std(a % 10, b % 10); 
     }
 }

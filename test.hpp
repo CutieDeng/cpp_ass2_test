@@ -53,6 +53,12 @@ namespace {
 
     // 使用如下三个 tree_node 构建一个小二叉树。
     r_type build_with_nodes(tree_node &father, tree_node &l_child, tree_node &r_child); 
+    
+    // 全等比较器。
+    int compare_equality(uint64_t, uint64_t ); 
+    
+    // 模十比较器. 
+    int compare_ones(uint64_t a, uint64_t b); 
 }
 
 #include "tool.hpp"
