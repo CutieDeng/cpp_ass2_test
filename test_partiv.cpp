@@ -105,6 +105,12 @@ r_type test<__COUNTER__>() {
 
 template <> 
 r_type test<__COUNTER__>() {
+    std::this_thread::sleep_for(std::chrono::seconds(5)); 
+    return {}; 
+}
+
+template <> 
+r_type test<__COUNTER__>() {
     // 插入若干元素并统计个数 
 
     std::cout << "构建一个全等 bst, 并向其中插入数据。" << std::endl; 

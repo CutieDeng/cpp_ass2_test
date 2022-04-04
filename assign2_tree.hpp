@@ -6,8 +6,8 @@
 
 struct tree_node; 
 
-inline thread_local std::unordered_set<void *> records; 
-inline thread_local std::unordered_set<void *> bst_record; 
+inline std::unordered_set<void *> records; 
+inline std::unordered_set<void *> bst_record; 
 
 struct tree_node {
     tree_node *father;

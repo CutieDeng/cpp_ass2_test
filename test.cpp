@@ -8,6 +8,11 @@
 #include "assign2.cpp"
 #endif
 
+#include <thread>
+#include <chrono> 
+#include <atomic>
+#include <future>
+
 std::function<void ()> run_next; 
 
 template <int x> 
@@ -15,13 +20,19 @@ std::optional<std::string> test();
 
 #include "test.hpp" 
 
-extern thread_local std::unordered_set<void *> records; 
+extern std::unordered_set<void *> records; 
+extern std::unordered_set<void *> bst_record; 
 
 template <int x> 
 void run(); 
 
+void invoke(); 
+
+void clear_record(); 
+
 template <> 
 void run<test_number>() {
+    run_next = nullptr;
     std::cout << "本次测试到此结束。" << std::endl 
         << "====================" << std::endl << std::endl; 
 }
@@ -45,15 +56,7 @@ void run() {
     }
     std::cout << "====================" << std::endl << std::endl; 
     
-    for (auto p: records)
-        free(p); 
-    records.clear(); 
-
-    for (auto p: bst_record)
-        free(p); 
-    bst_record.clear(); 
-
-    run<v+1>(); 
+    clear_record(); 
 }
 
 #include <cstdlib>
@@ -69,16 +72,8 @@ void segfault_sigaction(int s) {
     std::cout << "测试异常：Segmentation Fault! " << std::endl 
         << "====================" << std::endl << std::endl; 
     
-    for (auto p: records) 
-        free(p); 
-    for (auto p: bst_record)
-        free(p); 
-    records.clear(); 
-    bst_record.clear(); 
-
-    if (run_next)
-        run_next(); 
-
+    clear_record(); 
+    invoke(); 
     exit(0); 
 }
 
@@ -101,5 +96,34 @@ void register_seg_fault() {
 
 int main() {
     register_seg_fault(); 
-    run<0>(); 
+
+    run_next = run<0>; 
+
+    invoke(); 
+}
+
+void clear_record() {
+    for (auto p : records) 
+        free(p); 
+    records.clear(); 
+
+    for (auto p : bst_record) 
+        free(p); 
+    bst_record.clear(); 
+}
+
+void invoke() {
+    while (run_next) {
+        using namespace std::literals::chrono_literals; 
+
+        // std::thread t ([=] {run_next(); }); 
+        std::promise<void> p; 
+        std::thread ([&] { run_next(); p.set_value(); }).detach(); 
+
+        auto f = p.get_future(); 
+
+        if (f.wait_for(7s) == std::future_status::timeout) {
+            clear_record(); 
+        }
+    }
 }
