@@ -6,11 +6,95 @@
 #include <exception> 
 #include <initializer_list>
 #include <vector>
+#include <functional> 
+#include <utility> 
 
 // Use std::optional..., just called r_type and name test to achieve your tests! 
 
 namespace {
     typedef std::optional<std::string> r_type; 
+
+    // cutie 的命名空间内函数，请不必阅读此处代码。
+    // 该命名空间内的函数不建议测试者、开发者进行阅读。
+    namespace cutie {
+        template <typename ...Args>
+        void inner_format(std::stringstream &a, std::string_view s, int, Args const &...args); 
+
+        template <typename T> 
+        void to_string(std::ostream &, T const &); 
+
+        template <> 
+        void inner_format(std::stringstream &a, std::string_view s, int offset) {
+            while (s[offset]) {
+                a << s[offset++]; 
+            }
+        }
+
+        template <typename T, typename ...Args>
+        void inner_format(std::stringstream &a, std::string_view s, int offset, T const &arg, Args const &...args) {
+            bool flag = false; 
+            bool ignore = false; 
+            while (s[offset]) {
+                switch (s[offset]) {
+                    case '{': {
+                        if (ignore) 
+                            throw std::runtime_error("Invalid '}{' matching. "); 
+                        if (flag) 
+                            a << '{'; 
+                        flag = !flag; 
+                        break; 
+                    }
+                    case '}': {
+                        if (flag) {
+                            cutie::to_string(a, arg);
+                            inner_format(a, s, offset + 1, args...); 
+                            return ; 
+                        } else {
+                            if (ignore)
+                                a << '}'; 
+                            ignore = !ignore; 
+                        }
+                    }
+                    default: {
+                        a << s[offset];
+                        flag = false; 
+                        ignore = false; 
+                    }
+                }
+                ++offset;
+            }
+        }
+
+        template <typename T>
+        void to_string(std::ostream &o, T const &a) {
+            o << a; 
+            return ; 
+        }
+
+        template <> 
+        void to_string(std::ostream &o, tree_node const &t) {
+            o << "[tree_node value = " << t.data << ", n_count = " << t.node_count << 
+                ", t_count = " << t.tree_count << ". Relation(left: "; 
+            if (!t.l_child)  
+                o << "un"; o << "exists, right: "; 
+            if (!t.r_child)
+                o << "un"; o << "exists, father: "; 
+            if (!t.father)
+                o << "un"; o << "exists.]"; 
+            return ; 
+        }
+    }
+
+    // 格式化函数，支持快速格式化内容。
+    // 调用方法大致如下：format("Hello World"); 得到一个 Hello World 字符串。
+    // 等价地调用还有： format ("{} {}", "Hello", "World"); 
+    // 欢迎调戏。
+    template <typename ...Args> 
+    std::string format(std::string_view a, Args const & ...b)  {
+        std::stringstream s; 
+        cutie::inner_format(s, a, 0, b...); 
+        return s.str(); 
+    }
 
     // 该方法用于格式化 exception 信息，你可以使用该方法使一个 assign2_exception::exception 转化成一个
     // 人类可读的字符串。 
@@ -61,6 +145,16 @@ namespace {
         return i.str(); 
     }
 
+    uint32_t get_node_size(tree_node const &t) {
+        uint32_t ans {0}; 
+        if (t.l_child)
+            ans += t.l_child -> tree_count; 
+        if (t.r_child)
+            ans += t.r_child -> tree_count; 
+        ans += t.node_count; 
+        return ans; 
+    }
+
     // check_exception 用于判断两个异常类型是否完全相同。
     // 如果完全相同，其将会返回一个空对象，表示没有错误信息输出。
     // 如果存在不同，其将会返回一个具体描述为什么不同，两个异常实例不同点在哪的信息以便于被测进行 DEBUG. 
@@ -82,40 +176,108 @@ namespace {
     }
 
     // inert_data 聚合了插入 BST 的操作。
-    // 你可以使用 
+    // 你可以使用该方法快速将一组数据一次性插入到一个 BST 中。
+    // 它的返回值是一个变长数组，用以依顺序记录每次使用 insert_into_BST 的返回值。
+    // 本方法不期望在调用 insert_into_BST 的过程中得到一个异常回复。
     std::vector<tree_node *> insert_data(BST &bst, std::initializer_list<uint64_t> const &v){
         tree_node *p (nullptr); 
         std::vector<tree_node *> r;
         r.reserve(v.size());  
         for (auto va: v) {
-            insert_into_BST(&bst, va, &p); 
-            if (!p) 
-                throw std::string {"插入节点至 bst 中失败。"}; 
+            if (insert_into_BST(&bst, va, &p)) {
+                throw std::runtime_error("正确插入节点至 bst 中，却遭遇执行异常。"); 
+            }
             r.push_back(p); 
         }
         return std::move(r); 
     }
 
-    void destruct_tree_node(tree_node *p) {
-        if (!p)
-            return ; 
-        destruct_tree_node(p -> l_child); 
-        destruct_tree_node(p -> r_child); 
-        delete p; 
+    namespace cutie {
+        void destruct_tree_node(tree_node *p) {
+            if (!p)
+                return ; 
+            destruct_tree_node(p -> l_child); 
+            destruct_tree_node(p -> r_child); 
+            delete p; 
+        }
     }
 
+    // 该方法用于递归地删除一棵树。
+    // 调用该方法可以将一树 BST 上的所有节点都删除，并释放其所有节点的内存。
+    // insert 了太多节点不知道怎么释放？就用它吧！
     void destruct_tree(BST &bst) {
-        destruct_tree_node(bst.root); 
+        cutie::destruct_tree_node(bst.root); 
         bst.root = nullptr;        
     }
 
-    int size_of_tree(BST &bst) {
+    // 求取一棵树的数据数？
+    // 直接无脑 bst.root.tree_count? 
+    // 不如用用 size of tree 吧，有较避免 null pointer exception~. 
+    uint32_t size_of_tree(BST &bst) {
         if (bst.root)
             return bst.root -> tree_count; 
         else 
             return 0; 
     }
 
+    namespace cutie {
+        r_type check_node(tree_node const &t, int (c)(uint64_t, uint64_t )) {
+            if (t.node_count <= 0)
+                return format("检查发现某节点的 node_count 属性非法，节点信息：{}. ", t); 
+            if (auto i = get_node_size(t); i != t.tree_count) {
+                std::cout << "检查该点的 node_count 信息发现错误：" << std::endl; 
+                std::cout << format("错误节点为 {}.", t) << std::endl; 
+                return check_int(t.tree_count, i); 
+            } 
+            if (t.l_child) {
+                if (t.l_child -> father != &t) {
+                    if (t.l_child -> father) {
+                        return format("节点 {} 的 father 信息错误。\n\t应当出现的 father 节点为 {} \n\t而实际出现的 father 节点为 {}. ",
+                            *t.l_child, t, *t.l_child->father); 
+                    } else {
+                        return format("节点 {} 缺失 father 节点信息。", *t.l_child); 
+                    }
+                }
+                if (c(t.data, t.l_child->data) <= 0) {
+                    return format("非法的节点分布，节点 {} 有错误的左节点。", t); 
+                }
+                if (auto e = check_node(*t.l_child, c); e)
+                    return e; 
+            }
+            if (t.r_child) {
+                if (t.r_child -> father != &t) {
+                    if (t.r_child -> father) {
+                        return format("节点 {} 的 father 信息错误。\n\t应当出现的 father 节点为 {} \n\t而实际出现的 father 节点为 {}. ",
+                            *t.r_child, t, *t.r_child->father); 
+                    } else {
+                        return format("节点 {} 缺失 father 节点信息。", *t.r_child); 
+                    }
+                }
+                if (c(t.data, t.l_child->data) <= 0) {
+                    return format("非法的节点分布，节点 {} 有错误的右节点。", t); 
+                }
+                if (auto e = check_node(*t.r_child, c); e)
+                    return e; 
+            }
+            return {}; 
+        }
+    }
+
+    // 使用该方法来检查你的 BST 的正确性：
+    // 1. tree_count 结果的正确性
+    // 2. 是否满足 comp 函数计算结果的正确性
+    // 3. 各节点信息是否具有一致性 
+    // 检查成功则返回空对象，失败会返回一个包含错误信息的字符串。
+    r_type check_bst(BST const &bst) {
+        if (bst.root) {
+            if (bst.root->father)   
+                return "当前 bst.root 存在 father 节点。"; 
+            return check_node(bst.root); 
+        } else 
+            return {}; 
+    }
+
+    // 标准的比较器函数
     int compare_std(uint64_t a, uint64_t b) {
         if (a < b)
             return -1; 
@@ -124,6 +286,7 @@ namespace {
         else return 0; 
     }
 
+    // 对标准比较器取个反吧。
     int compare_reverse(uint64_t a, uint64_t b) {
         return -compare_std(a, b); 
     }
@@ -519,7 +682,7 @@ r_type test<__COUNTER__>() {
 }
 
 template <> 
-r_type test<__COUNTER__> () {
+r_type test<__COUNTER__>() {
     std::cout << "进行 Duplicated Insert to BST 测试" << std::endl; 
 
     std::cout << "构建 BST, 并试向其中插入值为 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 13, 8, 5, 3, 2 各节点。" << std::endl; 
@@ -527,13 +690,28 @@ r_type test<__COUNTER__> () {
     BST bst{.comp = compare_std}; 
     insert_data(bst, {1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 13, 8, 5, 3, 2}); 
 
-    std::cout << "正在比对 bst 的 size 值。" << std::endl; 
+    std::cout << "正在比对 bst 的 size 值，并递归删除该 BST. " << std::endl; 
     auto s = size_of_tree(bst); 
     destruct_tree(bst); 
 
     return check_int(s, 17); 
 }
 
+template <> 
+r_type test<__COUNTER__>() {
+    std::cout << "进行 Insert to BST 时的 Null Pointer Exception 测试" << std::endl;
+
+    std::cout << "构建 BST 且不初始化, 并向其中依次插入 21 节点. " << std::endl; 
+
+    BST bst {}; 
+    tree_node *store {}; 
+    if (auto e = insert_into_BST(&bst, 21, &store); e != NULL_POINTER_EXCEPTION) {
+        std::cout << "insert into BST 返回了错误的异常信息。" << std::endl; 
+        return check_exception(e, NULL_POINTER_EXCEPTION); 
+    }
+
+    return {}; 
+}
 
 namespace {
     constexpr int test_number {__COUNTER__}; 

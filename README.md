@@ -264,6 +264,10 @@ r_type test<__COUNTER__>() {
 
 你可以传入一个 `uint32_t` 并从中获得对应的 `std::string` 描述——用以描述该错误码对应的异常类型。
 
+你会在插入失败时得到一个抛出的 `std::runtime_error`. 
+
+
+
 
 
 ### 错误码比对方法
@@ -288,6 +292,83 @@ if (result) {
 
 
 上述代码和 `return result;` 完全等价。
+
+
+
+### 字符串格式化方法
+
+该方法为 `format (the original string, ... all object can be transfer to a string)`. 
+
+通过该方法，你可以快速构建一个内容错落有序的字符串信息。
+
+该方法类似 `printf`, 但你统一地使用 `{}` 来表示你希望将你的对象信息格式化后插入到哪即可。
+
+例如：`format ("{} {}{}", "Hello", "World", "\n");`. 
+
+目前支持的对象格式化有：一般的基本类型；`tree_node` 类型。
+
+
+
+
+
+### 获取该子树的大小
+
+方法签名：`uint32_t get_node_size(tree_node const &)`. 
+
+该方法会根据该点的左儿子、右儿子的信息来计算其子树大小情形！
+
+你可以使用 `get_node_size(node) == node.tree_count` 来判断该实现代码是否正确的计算出了 `tree_count` 的相关信息。
+
+
+
+
+
+
+
+### 移除 BST 所有节点方法
+
+方法签名：`void destruct_tree(BST &bst)` 
+
+由于通过 `insert_data` 得到的变长数组来进行内存的释放使用不便，并且存在内存泄漏的风险，所以特此增加此方法来回收树上所有节点的内存。
+
+该方法会在清空树上所有节点时将该树的 `root` 置为 `nullptr` 以保证信息的一致性。
+
+
+
+
+
+### 获得树上数据数方法
+
+方法签名：`uint32_t size_of_tree(BST &)`
+
+单纯通过根节点信息获取树的内容大小，没啥用的鸡肋方法——但可能你们用得上，我就写了。
+
+
+
+
+
+### 树结构检查方法
+
+方法签名：`r_type check_bst(BST const &);` 
+
+该方法将会检查树的结构是否存在错误：
+
+- 各结点信息关系内容不一致。
+- 树比较器信息与点关系不一致。
+- `tree_count` 计算结果不一致。
+
+
+
+
+
+:smile_cat: 待实现的方法：树深度计算方法
+
+
+
+### 比较器函数
+
+- `compare_std` 从小到大顺序比较器
+- `compare_reverse` 逆序比较器
 
 
 
