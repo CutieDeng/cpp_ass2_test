@@ -57,12 +57,25 @@ namespace {
 
 #include "tool.hpp"
 
-
 // 下面则包含了测试包。
 
+// 框架自测试包 
 // #include "test_frame.cpp" 
+
+// 曾同学提供的测试包
 // #include "test_zlx.cpp" 
+
+// 标准 part i 部分测试包
 #include "test_parti.cpp" 
+
+// 标准 part ii 部分测试包
+#include "test_partii.cpp"
+
+// 标准 part iii 部分测试包
+#include "test_partiii.cpp"
+
+// deprecated 测试包
+// #include "test_else.cpp"
 
 namespace {
     constexpr int test_number {__COUNTER__}; 
