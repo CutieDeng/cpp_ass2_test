@@ -82,7 +82,7 @@ namespace {
 // #include "test_frame.cpp" 
 
 // 曾同学提供的测试包
-// #include "test_zlx.cpp" 
+#include "test_zlx.cpp" 
 
 // 标准 part i 部分测试包
 #include "test_parti.cpp" 
