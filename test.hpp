@@ -59,6 +59,11 @@ namespace {
     
     // 模十比较器. 
     int compare_ones(uint64_t a, uint64_t b); 
+
+    // 复数比较器
+    int compare_complex(uint64_t, uint64_t ); 
+
+    uint64_t create_complex(uint32_t real, uint32_t imaginary); 
 }
 
 #include "tool.hpp"

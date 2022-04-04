@@ -7,6 +7,7 @@
 struct tree_node; 
 
 inline thread_local std::unordered_set<void *> records; 
+inline thread_local std::unordered_set<void *> bst_record; 
 
 struct tree_node {
     tree_node *father;
@@ -51,4 +52,25 @@ struct BST {
      * @returns (int < 0) if the first data field is smaller than the second one
      */
     int (*comp)(uint64_t, uint64_t);
+
+    inline void *operator new (size_t s) {
+        auto p {malloc(s)}; 
+        bst_record.insert(p); 
+        return p; 
+    }
+
+    inline void *operator new[] (size_t v) noexcept(false) {
+        throw std::string {"本次测试禁止使用 new[] 创建 bst 对象数组。"}; 
+    }
+
+    inline void operator delete (void *p) noexcept(false) {
+        if (!bst_record.count(p)) 
+            throw std::string{"试图释放非法的内存段。"}; 
+        bst_record.erase(p); 
+        free(p); 
+    }
+
+    inline void operator delete[] (void *p) noexcept (false) {
+        throw std::string {"不应使用 delete[] 操作。"}; 
+    }
 };

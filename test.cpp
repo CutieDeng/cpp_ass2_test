@@ -49,6 +49,10 @@ void run() {
         free(p); 
     records.clear(); 
 
+    for (auto p: bst_record)
+        free(p); 
+    bst_record.clear(); 
+
     run<v+1>(); 
 }
 
@@ -67,9 +71,14 @@ void segfault_sigaction(int s) {
     
     for (auto p: records) 
         free(p); 
+    for (auto p: bst_record)
+        free(p); 
     records.clear(); 
+    bst_record.clear(); 
+
     if (run_next)
-    run_next(); 
+        run_next(); 
+
     exit(0); 
 }
 

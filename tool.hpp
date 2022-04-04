@@ -311,4 +311,18 @@ namespace {
     int compare_ones(uint64_t a, uint64_t b) {
         return compare_std(a % 10, b % 10); 
     }
+
+    uint64_t map(uint64_t a) {
+        uint64_t r = a & 0xffffffff; 
+        uint64_t v = a >> 32; 
+        return r * r + v * v; 
+    }
+
+    int compare_complex(uint64_t a, uint64_t b) {   
+        return compare_std(map(a), map(b)); 
+    }
+
+    uint64_t create_complex(uint32_t real, uint32_t imaginary) {
+        return (static_cast<uint64_t>(imaginary) << 32) | real; 
+    }
 }

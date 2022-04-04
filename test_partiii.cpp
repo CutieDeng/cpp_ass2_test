@@ -64,6 +64,7 @@ r_type test<__COUNTER__>() {
 
 template <> 
 r_type test<__COUNTER__>() {
+    // 该测试开始测试树的大小有无错误。
     std::cout << "向标准的 bst 中插入不同数据。" << std::endl; 
 
     BST b{.comp = compare_std}; 
@@ -116,6 +117,7 @@ r_type test<__COUNTER__>() {
 
 template <> 
 r_type test<__COUNTER__>() {
+    // 该测试负责测试该树结构是否满足结构性的要求。
     std::cout << "向个位 bst 中插入若干数据。" << std::endl; 
 
     BST b{.comp = compare_ones}; 
@@ -123,6 +125,24 @@ r_type test<__COUNTER__>() {
     insert_data(b, {75, 84, 93, 102, 111, 120, 136, 147, 158, 169, 180}); 
 
     std::cout << "遍历树结构并进行检查。" << std::endl; 
+    if (auto e = check_bst(b); e) {
+        return e; 
+    } else {
+        destruct_tree(b); 
+        return {}; 
+    }
+}
+
+template <> 
+r_type test<__COUNTER__>() {
+    std::cout << "向虚数 bst 中插入若干数据。" << std::endl; 
+
+    BST b{.comp = compare_complex}; 
+
+    insert_data(b, {create_complex(1, 0), create_complex(3, 5), create_complex(4, 1), create_complex(8, 7)}); 
+
+    std::cout << "遍历树结构并进行检查。" << std::endl; 
+
     if (auto e = check_bst(b); e) {
         return e; 
     } else {
