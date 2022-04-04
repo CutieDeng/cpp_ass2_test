@@ -282,10 +282,7 @@ r_type test<__COUNTER__>() {
 
     BST bst {}; 
     tree_node *store {}; 
-    if (auto e = insert_into_BST(&bst, 21, &store); e != NULL_POINTER_EXCEPTION) {
-        std::cout << "insert into BST 返回了错误的异常信息。" << std::endl; 
-        return check_exception(e, NULL_POINTER_EXCEPTION); 
-    }
 
-    return {}; 
+    std::cout << "比对 insert into bst 时返回的异常信息。" << std::endl; 
+    return check_exception(insert_into_BST(&bst, 21, &store), NULL_COMP_FUNCTION_EXCEPTION); 
 }

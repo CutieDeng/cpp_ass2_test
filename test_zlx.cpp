@@ -1,16 +1,14 @@
-namespace zlx{
+namespace zlx {
+
     int comp(uint64_t a, uint64_t b);
     void inorder(BST * const bst, std::string *);
     void preorder(BST * const bst, std::string *);
+    void delete_tree(tree_node * );
     bool judge_bst(BST *bst, int &tree_count);
     tree_node * create_tree_node_test(uint64_t data); 
     BST * create_bst_test(tree_node *node, int (*comp)(uint64_t, uint64_t));
-    void delete_tree(tree_node * node); 
-}
 
-namespace zlx {
-
-    int test2() {
+    int main(){
         /*
             This is the test for function add_node. 
         */
@@ -328,6 +326,49 @@ namespace zlx {
             }
         }
 
+        // Part 3 - case 3
+        {
+            assign2_exception::exception e = 0;
+            try {
+                    BST *bst = new BST;
+                    bst->comp = comp;
+                    bst->root = nullptr;
+                    tree_node *targetnode;
+                    for (int i = 10000; i >= 1; i--){
+                        insert_into_BST(bst, i, &targetnode);
+                    }
+
+                    // BST *new_bst = new BST;
+                    // new_bst->root = targetnode;
+                    // new_bst->comp = comp;
+                    // insert_into_BST(new_bst, )
+                    std::string *s1 = new std::string, *s2 = new std::string;
+                    preorder(bst, s1);
+    
+                    inorder(bst, s2);
+
+                    std::string ans1="5011432152911363355389015611110033";
+                    std::string ans2="2911321536335011455386111901510033";
+                    int tree_c=0;
+                    if (!judge_bst(bst,tree_c)){
+                        delete s1;
+                        delete s2;
+                        delete_tree(bst->root);
+                        delete bst;
+                        
+                        throw e;
+                    }
+                    count++;
+                    delete s1;
+                    delete s2;
+                    delete_tree(bst->root);
+                    delete bst;
+            }
+            catch(assign2_exception::exception){
+                std::cout<<"\033[41;11m Error in part 3, case3! \033[0m\n";
+            }
+        }
+
         /*
             This is the test case for part 4.
         */
@@ -380,6 +421,7 @@ namespace zlx {
                     if (*target_node==NULL || (*target_node)->data !=32) delete_tree(bst->root), delete bst, e = 8, throw e; // judgement step 8.
                     count++;
                     delete_tree(bst->root);
+                    delete bst; 
             }
             catch(assign2_exception::exception){
                 std::cout<<"\033[41;11m Error in part 4, case1! Happen in judgement step "<<e<<". \033[0m\n";
@@ -436,27 +478,20 @@ namespace zlx {
                     if (!judge_bst(bst, tree_c) || bst->root!=test_node_three) delete_tree(bst->root), delete bst, throw e=3;
                     count++;
                     delete_tree(bst->root);
+                    delete bst; 
             }
             catch(assign2_exception::exception){
                 std::cout<<"\033[41;11m Error in part 5, case1! Happen in judgement step "<<e<<". \033[0m\n";
             }
         }
-        std::cout<<"The final result is "<<count<<"/22\n";
+        std::cout<<"The final result is "<<count<<"/23\n";
         std::cout<<"If you have patience, you can read my code and add some new test cases.\n";
         std::cout<<"Hope you a good score!\n";
         std::cout<<"If you find any bug or any wrong answer, please contact us.\n";
         return 0;
     }
 
-}
 
-template <> 
-r_type test<__COUNTER__>() {
-    zlx::test2(); 
-    return {}; 
-}
-
-namespace zlx {
     int comp(uint64_t a, uint64_t b){
         if (a == b) return 0;
         else if (a > b) return 1;
@@ -572,11 +607,16 @@ namespace zlx {
             delete node;
         }
     };
-
     /*
         author: 
             灵犀
         co-author:
-            方艺钧
+            方艺钧、邓值仁
     */
+}
+
+template <> 
+r_type test<__COUNTER__>() {
+    zlx::main(); 
+    return {}; 
 }

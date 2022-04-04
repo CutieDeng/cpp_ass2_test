@@ -325,4 +325,29 @@ namespace {
     uint64_t create_complex(uint32_t real, uint32_t imaginary) {
         return (static_cast<uint64_t>(imaginary) << 32) | real; 
     }
+
+    namespace cutie {
+        uint32_t height_of_node(tree_node const &node) {
+            uint32_t height = 0; 
+            if (node.l_child)
+                height = height_of_node(*node.l_child); 
+            if (node.r_child)
+                height = std::max(height, height_of_node(*node.r_child)); 
+            return height + 1; 
+        }
+    }
+
+    uint32_t height_of_bst(BST const &bst) {
+        if (!bst.root)
+            return 0; 
+        return cutie::height_of_node(*bst.root); 
+    }
+
+    r_type upper_limit_height(BST const &bst, uint32_t limits) {
+        auto actual = height_of_bst(bst); 
+        if (actual > limits) {
+            return format("超过限制的树高，bst 实际高度：{}, 限制高度：{}. ", actual, limits); 
+        } else 
+            return {}; 
+    }
 }

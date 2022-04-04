@@ -63,7 +63,12 @@ namespace {
     // 复数比较器
     int compare_complex(uint64_t, uint64_t ); 
 
+    // 创建虚数，以 uint64_t 格式表示。
     uint64_t create_complex(uint32_t real, uint32_t imaginary); 
+
+    // 约束该 bst 的高度至多为 limits. 
+    // 有根树的高度为 1.  
+    r_type upper_limit_height(BST const &, uint32_t ); 
 }
 
 #include "tool.hpp"
@@ -84,6 +89,9 @@ namespace {
 
 // 标准 part iii 部分测试包
 #include "test_partiii.cpp"
+
+// 标准 part iv 部分测试包
+#include "test_partiv.cpp"
 
 // deprecated 测试包
 // #include "test_else.cpp"
