@@ -32,7 +32,7 @@ void run() {
     run_next = run<v+1>; 
     try {
         auto r (test<v>()); 
-        if (!r && records.empty()) 
+        if (!r && records.empty() && bst_record.empty()) 
             std::cout << "测试通过！" << std::endl;     
         else if (r)
             std::cout << "测试失败，错误原因：" << *r << std::endl; 
