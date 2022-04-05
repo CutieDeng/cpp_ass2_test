@@ -128,3 +128,19 @@ r_type test<__COUNTER__>() {
         return check_int(s, 12); 
     }
 }
+
+template <> 
+r_type test<__COUNTER__>() {
+    // Thanks for the attribution of classmate Zhang Ce. 
+
+    std::cout << "构建一棵空 bst, 有comp方法, 并执行 find in bst. " << std::endl; 
+    BST bst{.comp = compare_std}; 
+    tree_node *ans {}; 
+
+    // 如果该值不计划用到，便不捕获它。
+    find_in_BST(&bst, 1, &ans); 
+
+    destruct_tree(bst); 
+    if (ans) return format("搜索结果不为空：{}", *ans); 
+    else return {}; 
+}
