@@ -138,7 +138,9 @@ r_type test<__COUNTER__>() {
     tree_node *ans {}; 
 
     // 如果该值不计划用到，便不捕获它。
-    find_in_BST(&bst, 1, &ans); 
+    if (auto e = find_in_BST(&bst, 1, &ans); e) {
+        return check_exception(e, 0); 
+    }
 
     destruct_tree(bst); 
     if (ans) return format("搜索结果不为空：{}", *ans); 
