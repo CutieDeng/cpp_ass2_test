@@ -4,14 +4,20 @@
 #include <string> 
 #include <unordered_set> 
 
+#include "encap_ptr.hpp"
+
 struct tree_node; 
 
 inline thread_local std::unordered_set<void *> records; 
 inline thread_local std::unordered_set<void *> bst_record; 
 
+typedef encap_ptr<tree_node> node_ptr; 
+typedef encap_ptr<node_ptr> node_pptr; 
+typedef encap_ptr<int> int_ptr; 
+
 struct tree_node {
-    tree_node *father;
-    tree_node *l_child, *r_child;
+    node_ptr father;
+    node_ptr l_child, r_child; 
 
     uint32_t node_count;  ///< the number of occurrences of a certain data (repetation count)
     uint32_t tree_count;  ///< the size of the subtree (including the root)
@@ -40,8 +46,9 @@ struct tree_node {
     }
 };
 
+
 struct BST {
-    tree_node *root;
+    node_ptr root;
 
     /**
      * (pointer to a function) compare two data, represented by uint64_t, mentioned in @link{tree_node#data}
@@ -74,3 +81,6 @@ struct BST {
         throw std::string {"不应使用 delete[] 操作。"}; 
     }
 };
+
+typedef encap_ptr<BST> bst_ptr; 
+typedef encap_ptr<bst_ptr> bst_pptr; 

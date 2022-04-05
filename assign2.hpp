@@ -27,7 +27,7 @@
  * @exception assign2_exception::DUPLICATED_FATHER_EXCEPTION
  * @exception assign2_exception::INVALID_CHILD_DIRECTION_EXCEPTION
  */
-assign2_exception::exception add_node(tree_node *father, tree_node *child, int child_direction);
+assign2_exception::exception add_node(node_ptr father, node_ptr child, int child_direction);
 
 /**
  * judge whether the node @p node is the left or right child of its father, and store the result to @p child_direction
@@ -37,7 +37,7 @@ assign2_exception::exception add_node(tree_node *father, tree_node *child, int c
  * @exception assign2_exception::NULL_POINTER_EXCEPTION
  * @exception assign2_exception::ROOTS_FATHER_EXCEPTION
  */
-assign2_exception::exception judge_child_direction(tree_node *node, int *child_direction);
+assign2_exception::exception judge_child_direction(node_ptr node, int_ptr child_direction);
 
 /**
  * insert specific @p data into @p bst, according to the @link{BST#comp(uint64_t, uint64_t)} function
@@ -47,7 +47,7 @@ assign2_exception::exception judge_child_direction(tree_node *node, int *child_d
  * @exception assign2_exception::NULL_POINTER_EXCEPTION
  * @exception assign2_exception::NULL_COMP_FUNCTION_EXCEPTION
  */
-assign2_exception::exception insert_into_BST(BST *bst, uint64_t data, tree_node **inserted_node);
+assign2_exception::exception insert_into_BST(bst_ptr bst, uint64_t data, node_pptr inserted_node);
 
 /**
  * find specific data in the BST, and storing the target tree node into ans
@@ -57,7 +57,7 @@ assign2_exception::exception insert_into_BST(BST *bst, uint64_t data, tree_node 
  * @exception assign2_exception::NULL_POINTER_EXCEPTION
  * @exception assign2_exception::NULL_COMP_FUNCTION_EXCEPTION
  */
-assign2_exception::exception find_in_BST(BST *bst, uint64_t data, tree_node **target_node);
+assign2_exception::exception find_in_BST(bst_ptr bst, uint64_t data, node_pptr target_node);
 
 /**
  * splay tree node @p node to the root of binary search tree if @p node is in @p bst
@@ -70,4 +70,4 @@ assign2_exception::exception find_in_BST(BST *bst, uint64_t data, tree_node **ta
  * @exception assign2_exception::NULL_COMP_FUNCTION_EXCEPTION
  * @exception assign2_exception::SPLAY_NODE_NOT_IN_TREE_EXCEPTION
  */
-assign2_exception::exception splay(BST *bst, tree_node *node);
+assign2_exception::exception splay(bst_ptr bst, node_ptr node);
