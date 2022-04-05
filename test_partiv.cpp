@@ -135,7 +135,8 @@ r_type test<__COUNTER__>() {
 
     std::cout << "构建一棵空 bst, 有comp方法, 并执行 find in bst. " << std::endl; 
     BST bst{.comp = compare_std}; 
-    tree_node *ans {}; 
+    tree_node t{}; 
+    tree_node *ans {&t}; 
 
     // 如果该值不计划用到，便不捕获它。
     if (auto e = find_in_BST(&bst, 1, &ans); e) {
