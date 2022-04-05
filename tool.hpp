@@ -176,9 +176,10 @@ namespace {
     // 你可以使用该方法快速将一组数据一次性插入到一个 BST 中。
     // 它的返回值是一个变长数组，用以依顺序记录每次使用 insert_into_BST 的返回值。
     // 本方法不期望在调用 insert_into_BST 的过程中得到一个异常回复。
-    std::vector<tree_node *> insert_data(BST &bst, std::initializer_list<uint64_t> const &v){
-        tree_node *p (nullptr); 
-        std::vector<tree_node *> r;
+    std::vector<node_ptr> insert_data(BST &bst, std::initializer_list<uint64_t> const &v){
+        // tree_node *p (nullptr); 
+        node_ptr p{}; 
+        std::vector<node_ptr> r;
         r.reserve(v.size());  
         for (auto va: v) {
             if (insert_into_BST(&bst, va, &p)) {
@@ -190,7 +191,7 @@ namespace {
     }
 
     namespace cutie {
-        void destruct_tree_node(tree_node *p) {
+        void destruct_tree_node(node_ptr p) {
             if (!p)
                 return ; 
             destruct_tree_node(p -> l_child); 
@@ -352,7 +353,7 @@ namespace {
     }
 
     r_type rotate_to_top(BST &bst, uint64_t data) {
-        tree_node *node {}; 
+        node_ptr node {}; 
         if (auto e = find_in_BST(&bst, data, &node); e) {
             return format("在 bst 中搜索 {} 遭遇异常：{}. ", data, transfer_exception(e)); 
         }

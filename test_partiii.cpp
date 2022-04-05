@@ -23,7 +23,7 @@ r_type test<__COUNTER__>() {
     std::cout << "向未初始化的 bst 中插入数据。" << std::endl; 
 
     BST b{}; 
-    tree_node *p {}; 
+    node_ptr p {}; 
 
     return check_exception(insert_into_BST(&b, 21, &p), NULL_COMP_FUNCTION_EXCEPTION); 
 }
@@ -33,7 +33,7 @@ r_type test<__COUNTER__>() {
     std::cout << "向标准的空 bst 中插入一条数据。" << std::endl; 
 
     BST b{.comp = compare_std}; 
-    tree_node *p {}; 
+    node_ptr p {}; 
 
     if (auto e = check_exception(insert_into_BST(&b, 66, &p), 0); e) {
         return e; 
@@ -48,7 +48,7 @@ r_type test<__COUNTER__>() {
     std::cout << "向标准的空 bst 中插入两条相同数据。" << std::endl; 
 
     BST b{.comp = compare_std}; 
-    tree_node *p {}; 
+    node_ptr p {}; 
 
     insert_into_BST(&b, 42, &p); 
     insert_into_BST(&b, 42, &p); 

@@ -1,5 +1,6 @@
 #include <unordered_set> 
 #include <exception> 
+#include <iostream> 
 
 template <typename T> 
 class encap_ptr; 
@@ -20,7 +21,7 @@ class encap_ptr {
         inline explicit (false) operator T *(); 
         inline operator T *const() const; 
 
-        inline encap_ptr<T *> operator &(); 
+        inline encap_ptr<encap_ptr<T>> operator &(); 
         inline encap_ptr<T *const> operator &() const; 
 
         // encap_ptr<T> &operator =(encap_ptr<T> o); 
@@ -36,7 +37,8 @@ class encap_ptr<encap_ptr<T>> {
     public: 
         static std::unordered_set<void*> set; 
 
-        explicit (false) encap_ptr(T **t): value((encap_ptr<T>*)t) {} 
+        // explicit (false) encap_ptr(T **t): value((encap_ptr<T>*)t) {} 
+        explicit (false) encap_ptr(encap_ptr<T> *t) : value(t) {} 
         explicit (false) encap_ptr(): encap_ptr(nullptr) {} 
 
         inline encap_ptr<T> &operator *() const; 
@@ -62,7 +64,7 @@ encap_ptr<encap_ptr<T>>::operator encap_ptr<T> *() {
 } 
 
 template <typename T> 
-encap_ptr<T> &encap_ptr<encap_ptr<T>>::operator *() {
+encap_ptr<T> &encap_ptr<encap_ptr<T>>::operator *() const {
     if (!value)
         throw std::runtime_error("Segmentaion Fault!"); 
     return *value; 
@@ -77,8 +79,6 @@ T &encap_ptr<T>::operator *() const {
 
 template <typename T> 
 encap_ptr<T>::operator T *() {
-    if (!value)
-        throw std::runtime_error("Segmentation fault"); 
     return value; 
 }
 
@@ -96,14 +96,12 @@ encap_ptr<T>::operator T *() {
 
 template <typename T> 
 encap_ptr<T>::operator T *const() const {
-    if (!value)
-        throw std::runtime_error("Segmentation Fault"); 
     return value; 
 }
 
 template <typename T> 
-encap_ptr<T*> encap_ptr<T>::operator &() {
-    return &value; 
+encap_ptr<encap_ptr<T>> encap_ptr<T>::operator &() {
+    return this; 
 }
 
 template <typename T> 

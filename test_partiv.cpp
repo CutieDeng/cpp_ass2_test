@@ -6,7 +6,7 @@ r_type test<__COUNTER__>() {
     // 先测试对空树的查询吧. 
     std::cout << "构建一棵空 bst, 并执行 find in bst. " << std::endl; 
     BST bst{}; 
-    tree_node *ans; 
+    node_ptr ans; 
 
     return check_exception(find_in_BST(&bst, 0, &ans), NULL_COMP_FUNCTION_EXCEPTION); 
 }
@@ -16,7 +16,7 @@ r_type test<__COUNTER__>() {
     // 再测试直接对 nullptr bst 进行查询。
 
     std::cout << "执行 find in bst (nullptr). " << std::endl; 
-    tree_node *ans; 
+    node_ptr ans; 
     
     return check_exception(find_in_BST(nullptr, 674, &ans), NULL_POINTER_EXCEPTION); 
 }
@@ -38,7 +38,7 @@ r_type test<__COUNTER__>() {
     std::cout << "构造一棵标准的 bst, 并插入若干数据。" << std::endl; 
 
     BST bst{.comp = compare_std}; 
-    tree_node *ans{}; 
+    node_ptr ans{}; 
 
     insert_data(bst, {2, 6, 5, 8, 11, 21, 44, 75}); 
 
@@ -57,7 +57,7 @@ r_type test<__COUNTER__>() {
     std::cout << "构建一棵 bst, 并向其中插入数据。" << std::endl; 
 
     BST bst {.comp = compare_std}; 
-    tree_node *ans {}; 
+    node_ptr ans {}; 
 
     insert_data (bst, {61, 77, 211, 343, 659, 871, 902, 1000, 2103}); 
 
@@ -82,7 +82,7 @@ r_type test<__COUNTER__>() {
     std::cout << "构建一棵个位 bst, 并向其中插入数据。 " << std::endl; 
 
     BST bst {.comp = compare_ones}; 
-    tree_node *ans {}; 
+    node_ptr ans {}; 
 
     insert_data (bst, {5, 3, 8, 4, 6, 2, 9, 7, 1, 0}); 
     insert_data (bst, {33, 46, 55, 88, 921, 516, 727, 457, 595, 121, 75}); 
@@ -110,7 +110,7 @@ r_type test<__COUNTER__>() {
     std::cout << "构建一个全等 bst, 并向其中插入数据。" << std::endl; 
 
     BST bst {.comp = compare_equality}; 
-    tree_node *ans {}; 
+    node_ptr ans {}; 
 
     insert_data(bst, {1, 7, 5, 10, 21, 55, 7, 33, 21, 6, 81, 1}); 
 
@@ -136,7 +136,7 @@ r_type test<__COUNTER__>() {
     std::cout << "构建一棵空 bst, 有comp方法, 并执行 find in bst. " << std::endl; 
     BST bst{.comp = compare_std}; 
     tree_node t{}; 
-    tree_node *ans {&t}; 
+    node_ptr ans {&t}; 
 
     if (auto e = find_in_BST(&bst, 1, &ans); e) {
         return check_exception(e, 0); 

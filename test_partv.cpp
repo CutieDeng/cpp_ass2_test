@@ -53,7 +53,7 @@ r_type test<__COUNTER__>() {
     insert_data(bst2, l); 
 
     std::cout << "查询一棵树上的结果，对另一棵树调用 splay. " << std::endl; 
-    tree_node *p {}; 
+    node_ptr p {}; 
     find_in_BST(&bst2, 909, &p); 
 
     if (auto e = check_exception(splay(&bst, p), SPLAY_NODE_NOT_IN_TREE_EXCEPTION); e) {

@@ -26,7 +26,7 @@ namespace {
     // 你可以使用该方法快速将一组数据一次性插入到一个 BST 中。
     // 它的返回值是一个变长数组，用以依顺序记录每次使用 insert_into_BST 的返回值。
     // 本方法不期望在调用 insert_into_BST 的过程中得到一个异常回复。
-    std::vector<tree_node *> insert_data(BST &, std::initializer_list<uint64_t> const &); 
+    std::vector<node_ptr> insert_data(BST &, std::initializer_list<uint64_t> const &); 
 
     // 该方法用于递归地删除一棵树。
     // 调用该方法可以将一树 BST 上的所有节点都删除，并释放其所有节点的内存。
@@ -82,7 +82,7 @@ namespace {
 // #include "test_frame.cpp" 
 
 // 曾同学提供的测试包
-#include "test_zlx.cpp" 
+// #include "test_zlx.cpp" 
 
 // 标准 part i 部分测试包
 #include "test_parti.cpp" 
