@@ -174,3 +174,22 @@ r_type test<__COUNTER__>() {
     
     return {}; 
 }
+
+template <> 
+r_type test<__COUNTER__>() {
+    // 判断是否成功将点相连。
+
+    std::cout << "构建一棵普通二层二叉树，并测试点的相连情形。" << std::endl; 
+
+    tree_node t{}, l{}, r{}; 
+
+    build_with_nodes(t, l, r);
+
+    if (t.l_child != &l || l.father != &t) 
+        return "根节点与左子节点没有正确相连。"; 
+
+    if (t.r_child != &r || r.father != &t) 
+        return "根节点与右子节点没有正确相连。";  
+
+    return {}; 
+}

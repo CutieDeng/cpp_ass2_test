@@ -44,7 +44,7 @@ r_type test<__COUNTER__>() {
 
     std::cout << "搜索不存在于 bst 中的数据。" << std::endl; 
     // 搜索不存在的节点 
-    auto e = find_in_BST(&bst, 1, &ans); 
+    find_in_BST(&bst, 1, &ans); 
 
     destruct_tree(bst); 
     if (ans) return format("搜索结果不为空：{}", *ans); 
