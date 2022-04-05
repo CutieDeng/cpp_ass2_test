@@ -150,3 +150,22 @@ r_type test<__COUNTER__>() {
         return {}; 
     }
 }
+
+template <> 
+r_type test<__COUNTER__>() {
+    std::cout << "向 bst 中插入若干不同数据，后只插入重复数据。" << std::endl; 
+
+    BST b {.comp = compare_std}; 
+
+    insert_data(b, {71, 82, 955, 256, 346, 8237, 384, 758, 1245, 432}); 
+    insert_data(b, {71, 71, 256, 8237, 758, 432}); 
+
+    std::cout << "遍历树结构进行检查。" << std::endl; 
+
+    if (auto e = check_bst(b); e) {
+        return e; 
+    } else {
+        destruct_tree(b); 
+        return {}; 
+    }
+}
