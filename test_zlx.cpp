@@ -641,7 +641,7 @@ namespace zlx {
 
             e|=splay(bst, node);
             //std::cout<<e<<std::endl;
-            if (e==128) throw e;
+            if (e!=128) throw e;
             count++; 
         }
         catch(assign2_exception::exception)
