@@ -2,6 +2,8 @@
 #include <exception> 
 #include <iostream> 
 
+#define ENCAP_POINTER
+
 template <typename T> 
 class encap_ptr; 
 
