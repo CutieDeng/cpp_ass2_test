@@ -11,6 +11,15 @@ r_type test<__COUNTER__>() {
 
 template <> 
 r_type test<__COUNTER__>() {
+    // 该测试测试一个 invalid splay 旋转一个 node. 
+    std::cout << "初始化一个节点 node, 并调用 splay node. (in a nullptr splay tree). " << std::endl; 
+    tree_node t{}; 
+
+    return check_exception(splay(nullptr, &t), NULL_POINTER_EXCEPTION | SPLAY_NODE_NOT_IN_TREE_EXCEPTION);
+}
+
+template <> 
+r_type test<__COUNTER__>() {
     // 本测试负责测试未完全初始化的 bst splay. 
 
     std::cout << "未完全初始化一个 bst, 并对其调用 splay nullptr. " << std::endl; 
